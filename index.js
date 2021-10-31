@@ -86,14 +86,38 @@ async function run() {
             const bookings = await bookingCollection.find(query).toArray();
             res.send(bookings);
         });
-        // //DELETE API
-        // app.delete('/places/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) }
-        //     const result = await PlaceCollections.deleteOne(query);
-        //     console.log(`place ${id}  deleted Successfully`, result);
-        //     res.json(result)
-        // })
+        // Get Single place
+        app.get('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+
+            const booking = await PlaceColbookingCollectionlections.findOne(query);
+            res.send(booking)
+            console.log(`Got place: ${id} result: ${booking}`);
+        })
+        //DELETE API
+        app.delete('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const result = await bookingCollection.deleteOne(query);
+            console.log(`place ${id}  deleted Successfully`, result);
+            res.json(result)
+        })
+        //UPDATE API
+        app.put('/bookings/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedUser = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: `Approved`
+                },
+            };
+            const result = await bookingCollection.updateOne(filter, updateDoc, options)
+            console.log('updating', id)
+            res.json(result)
+        })
     } finally {
         // await client.close();
     }
