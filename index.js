@@ -74,8 +74,18 @@ async function run() {
         app.post('/bookings', async (req, res) => {
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
+            console.log(result);
             res.json(result);
-        })
+        });
+        // Use POST to get bookings by id
+        app.post('bookings/byKeys', async (req, res) => {
+            const keys = req.body;
+            console.log('Hitted');
+            console.log('body baba: ', keys)
+            const query = { email: { $in: keys } }
+            const bookings = await bookingCollection.find(query).toArray();
+            res.send(bookings);
+        });
         // //DELETE API
         // app.delete('/places/:id', async (req, res) => {
         //     const id = req.params.id;
@@ -96,5 +106,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log('Listening from port:', port)
+    console.log('ExTour Listening from port:', port)
 })
