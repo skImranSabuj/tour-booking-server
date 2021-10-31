@@ -35,6 +35,16 @@ async function run() {
             const places = await cursor.toArray();
             res.send(places);
         });
+        app.get('/bookings', async (req, res) => {
+            const cursor = bookingCollection.find({});
+
+            // print a message if no documents were found
+            if ((await cursor.count()) === 0) {
+                console.log("No documents found!");
+            }
+            const bookings = await cursor.toArray();
+            res.send(bookings);
+        });
 
         // Get Single place
         app.get('/places/:id', async (req, res) => {
@@ -63,7 +73,7 @@ async function run() {
         // Add Bookings API:
         app.post('/bookings', async (req, res) => {
             const booking = req.body;
-            const result = await bookingCollection.insertOne(order);
+            const result = await bookingCollection.insertOne(booking);
             res.json(result);
         })
         // //DELETE API
